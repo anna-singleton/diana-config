@@ -1,0 +1,5 @@
+- name: things to do when jellyfin needs a restart
+  listen: jellyfin_restart
+  ansible.builtin.systemd:
+    name: jellyfin
+    state: restarted

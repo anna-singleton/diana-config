@@ -1,0 +1,68 @@
+- name: add universe apt repository
+  ansible.builtin.apt_repository:
+    repo: "{{ item }}"
+  loop:
+    - "deb http://archive.canonical.com/ubuntu/ jammy universe"
+    - "deb http://archive.ubuntu.com/ubuntu/ jammy-updates universe"
+    - "deb http://security.ubuntu.com/ubuntu/ jammy-security universe"
+  become: true
+
+- name: download jellyfin's GPG key
+  block:
+    - name: make jellyfin gpg directory
+      ansible.builtin.file:
+        path: "/etc/apt/keyrings"
+        state: directory
+        mode: '0755'
+    - name: check if gpg key exists on disk
+      ansible.builtin.stat:
+        path: "/etc/apt/keyrings/jellyfin.gpg"
+      register: jellyfin_gpg_exists
+    - name: download gpg key if not exist
+      ansible.builtin.shell: curl -fsSL https://repo.jellyfin.org/jellyfin_team.gpg.key | sudo gpg --dearmor -o /etc/apt/keyrings/jellyfin.gpg
+      when: not jellyfin_gpg_exists.stat.exists
+  become: true
+
+- name: add repository config for jellyfin
+  ansible.builtin.copy:
+    src: jellyfin.sources
+    dest: /etc/apt/sources.list.d/jellyfin.sources
+    mode: '0755'
+  become: true
+
+- name: install jellyfin
+  block:
+    - ansible.builtin.apt:
+        update_cache: yes
+        cache_valid_time: 3600
+    - ansible.builtin.apt:
+        name: jellyfin
+      notify: jellyfin_update
+  become: true
+
+- name: set default env vars
+  ansible.builtin.copy:
+    src: env-vars
+    dest: /etc/default/jellyfin
+    mode: '0755'
+  become: true
+
+# user exists from the intall jellyfin step
+- name: ensure jellyfin directories exists
+  ansible.builtin.file:
+    path: "/home/jellyfin/{{ item }}"
+    state: directory
+    mode: '0755'
+    owner: jellyfin
+    group: jellyfin
+  loop:
+    - media
+    - cache
+    - config
+  become: true
+
+- name: start & enable the jellyfin systemd service
+  ansible.builtin.systemd:
+    state: started
+    enabled: true
+    name: jellyfin

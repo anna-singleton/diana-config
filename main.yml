@@ -1,0 +1,5 @@
+- name: Test play
+  hosts: media
+  roles:
+    - common
+    - deploy_jellyfin
