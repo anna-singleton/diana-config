@@ -1,0 +1,7 @@
+- name: install packages
+  ansible.builtin.apt:
+    pkg:
+      - fail2ban
+        # file sharing
+      - unison
+  become: true
