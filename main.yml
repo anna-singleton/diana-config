@@ -2,4 +2,5 @@
   hosts: media
   roles:
     - common
+    - deploy_unison
     - deploy_jellyfin

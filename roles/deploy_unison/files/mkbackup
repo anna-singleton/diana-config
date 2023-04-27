@@ -1,0 +1,39 @@
+#!/bin/bash
+
+# args:
+# 1 - file path to make it at
+mkarchive(){
+	echo "$1"
+	eval "tar czf $1 ~unison/sync"
+}
+
+name="backup-sync-$(date +%Y-%m-%d).tar.gz"
+echo $name
+
+if [[ $1 == "MONTHLY" ]]; then
+	echo "doing a monthly backup."
+	mkdir -p ~/backup-vault/monthly/
+	filepath="~/backup-vault/monthly/$name"
+elif [[ $1 == "DAILY" ]]; then
+	echo "doing a daily backup"
+	mkdir -p ~/backup-vault/daily/
+	filepath="~/backup-vault/daily/$name"
+else
+	echo "unknown option for \$1 passed: $1"
+	exit 1
+fi
+
+mkarchive $filepath
+
+
+if [[ $1 == "MONTHLY" ]]; then
+	echo "putting monthly backup into S3 cold storage"
+	cmd="s3cmd put $filepath s3://diana-backup/backup-monthly/$name --storage-class=GLACIER"
+	echo "MONTHLY_CMD: $cmd"
+	eval $cmd
+fi
+
+echo "putting backup into S3 infrequent access storage"
+cmd="s3cmd put $filepath s3://diana-backup/backup-daily/$name --storage-class=STANDARD_IA"
+echo "DAILY_CMD: $cmd"
+eval $cmd

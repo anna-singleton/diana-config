@@ -1,0 +1,6 @@
+#!/bin/bash
+
+dir="$HOME/backup-vault/daily/"
+days=30
+echo -n "removing files in $dir that are older than $days days: "
+find "$dir" -mtime +$days -type f -exec echo {} \; -exec rm {} \; | wc -l

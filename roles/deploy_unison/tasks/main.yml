@@ -1,0 +1,35 @@
+- name: ensure unison user exists
+  ansible.builtin.user:
+    name: unison
+  become: true
+
+- name: deploy management scripts
+  ansible.builtin.copy:
+    src: '{{ item }}'
+    dest: '~unison/{{ item }}'
+    mode: 0755
+    owner: unison
+    group: unison
+  loop:
+    - 'clear_old_dailys'
+    - 'mkbackup'
+  become: true
+
+- name: daily backup cron
+  ansible.builtin.cron:
+    name: "take daily sync-backup"
+    minute: 0
+    hour: 1
+    job: "~unison/mkbackup DAILY"
+    user: unison
+  become: true
+
+- name: daily cleanup cron
+  ansible.builtin.cron:
+    name: "remove old daily backups"
+    minute: 0
+    hour: 2
+    job: "~unison/clear_old_dailys"
+    user: unison
+  become: true
+
