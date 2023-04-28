@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 # args:
 # 1 - file path to make it at
 mkarchive(){
@@ -31,9 +33,11 @@ if [[ $1 == "MONTHLY" ]]; then
 	cmd="s3cmd put $filepath s3://diana-backup/backup-monthly/$name --storage-class=GLACIER"
 	echo "MONTHLY_CMD: $cmd"
 	eval $cmd
+    curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ healthchecks_monthly_endpoint }}
 fi
 
 echo "putting backup into S3 infrequent access storage"
 cmd="s3cmd put $filepath s3://diana-backup/backup-daily/$name --storage-class=STANDARD_IA"
 echo "DAILY_CMD: $cmd"
 eval $cmd
+curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ healthchecks_daily_endpoint }}

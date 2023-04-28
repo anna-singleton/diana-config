@@ -1,6 +1,9 @@
 #!/bin/bash
 
+set -e
+
 dir="$HOME/backup-vault/daily/"
 days=30
 echo -n "removing files in $dir that are older than $days days: "
 find "$dir" -mtime +$days -type f -exec echo {} \; -exec rm {} \; | wc -l
+curl -fsS -m 10 --retry 5 -o /dev/null https://hc-ping.com/{{ healthchecks_clear_endpoint }}

@@ -2,4 +2,4 @@
 
 . ~/.venvs/ansible/bin/activate
 
-ansible-playbook -K -i inventory.yml main.yml
+ansible-playbook --ask-vault-pass -K -i inventory.yml main.yml

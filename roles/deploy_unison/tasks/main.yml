@@ -4,7 +4,7 @@
   become: true
 
 - name: deploy management scripts
-  ansible.builtin.copy:
+  ansible.builtin.template:
     src: '{{ item }}'
     dest: '~unison/{{ item }}'
     mode: 0755
@@ -15,11 +15,23 @@
     - 'mkbackup'
   become: true
 
+- name: monthly archive backup cron
+  ansible.builtin.cron:
+    name: "monthly archive sync-backup"
+    minute: 0
+    hour: 1
+    day: "1"
+    job: "~unison/mkbackup MONTHLY"
+    user: unison
+  become: true
+
+
 - name: daily backup cron
   ansible.builtin.cron:
     name: "take daily sync-backup"
     minute: 0
     hour: 1
+    day: "2-31"
     job: "~unison/mkbackup DAILY"
     user: unison
   become: true
