@@ -2,7 +2,8 @@
   ansible.builtin.apt:
     pkg:
       - fail2ban
-        # file sharing
+      - curl
+      - gnupg
       # - unison cannot install with APT, versions need to be the same on client
       # and server, easier to manage this myself.
   become: true

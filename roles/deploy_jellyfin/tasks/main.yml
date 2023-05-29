@@ -1,12 +1,3 @@
-- name: add universe apt repository
-  ansible.builtin.apt_repository:
-    repo: "{{ item }}"
-  loop:
-    - "deb http://archive.canonical.com/ubuntu/ jammy universe"
-    - "deb http://archive.ubuntu.com/ubuntu/ jammy-updates universe"
-    - "deb http://security.ubuntu.com/ubuntu/ jammy-security universe"
-  become: true
-
 - name: download jellyfin's GPG key
   block:
     - name: make jellyfin gpg directory
@@ -37,7 +28,7 @@
         cache_valid_time: 3600
     - ansible.builtin.apt:
         name: jellyfin
-      notify: jellyfin_update
+      notify: jellyfin_restart
   become: true
 
 - name: set default env vars
