@@ -1,0 +1,41 @@
+version: '3'
+services:
+  influxdb:
+    image: influxdb:latest
+    ports:
+      - '8086:8086'
+    volumes:
+      - type: bind
+        src: /home/monitoring/sto-influxdb
+        dst: /var/lib/influxdb
+    environment:
+      - INFLUXDB_DB=db0
+      - INFLUXDB_ADMIN_USER={{ influxdb_user }}
+      - INFLUXDB_ADMIN_PASSWORD={{ influxdb_password }}
+  chronograf:
+    image: chronograf:latest
+    ports:
+      - '127.0.0.1:8888:8888'
+    volumes:
+      - type: bind
+        src: /home/monitoring/sto-chronograf
+        dst: /var/lib/chronograf
+    depends_on:
+      - influxdb
+    environment:
+      - INFLUXDB_URL=http://influxdb:8086
+      - INFLUXDB_USERNAME={{ influxdb_user }}
+      - INFLUXDB_PASSWORD={{ influxdb_password }}
+  grafana:
+    image: grafana/grafana:latest
+    ports:
+      - '3000:3000'
+    volumes:
+      - type: bind
+        src: /home/monitoring/sto-grafana
+        dst: /var/lib/grafana
+    depends_on:
+      - influxdb
+    environment:
+      - GF_SECURITY_ADMIN_USER={{ grafana_user }}
+      - GF_SECURITY_ADMIN_PASSWORD={{ grafana_password }}

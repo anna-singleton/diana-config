@@ -1,0 +1,8 @@
+- name: restart grafana stack on change
+  listen: grafana_stack_restart
+  ansible.builtin.systemd:
+    daemon_reload: true
+    name: "grafana-stack"
+    enabled: true
+    state: restarted
+  become: true

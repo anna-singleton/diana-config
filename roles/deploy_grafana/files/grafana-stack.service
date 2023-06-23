@@ -1,0 +1,16 @@
+[Unit]
+Description=Grafana and InfluxDB deployed with docker-compose
+Requires=docker.service
+After=docker.service
+
+[Service]
+Restart=always
+User=monitoring
+Group=docker
+WorkingDirectory=/home/monitoring/docker/
+ExecStartPre=/usr/bin/docker-compose -f docker-compose.yml down
+ExecStart=/usr/bin/docker-compose -f docker-compose.yml up
+ExecStop=/usr/bin/docker-compose -f docker-compose.yml down
+
+[Install]
+WantedBy=multi-user.target
