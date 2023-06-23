@@ -4,3 +4,4 @@
     - common
     - deploy_unison
     - deploy_jellyfin
+    - install_docker

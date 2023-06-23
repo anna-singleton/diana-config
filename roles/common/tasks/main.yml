@@ -4,6 +4,9 @@
       - fail2ban
       - curl
       - gnupg
+      - apt-transport-https
+      - ca-certificates
+      - lsb-release
       # - unison cannot install with APT, versions need to be the same on client
       # and server, easier to manage this myself.
   become: true
