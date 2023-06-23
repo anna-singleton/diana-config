@@ -2,6 +2,7 @@
   hosts: media
   roles:
     - common
+    - install_docker
     - deploy_unison
     - deploy_jellyfin
-    - install_docker
+    - deploy_grafana
