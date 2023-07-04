@@ -2,6 +2,7 @@
   ansible.builtin.user:
     name: monitoring
     groups: docker
+    shell: /bin/bash
     append: true
   become: true
 
@@ -17,6 +18,7 @@
     - "sto-influxdb"
     - "sto-chronograf"
     - "sto-grafana"
+    - "conf-telegraf"
   become: true
 
 - name: "template out docker-compose.yml for grafana"
@@ -35,3 +37,13 @@
     dest: "/etc/systemd/system/grafana-stack.service"
   become: true
   notify: "grafana_stack_restart"
+
+- name: "template out telegraf-conf"
+  ansible.builtin.template:
+    src: "telegraf.conf"
+    dest: "/home/monitoring/conf-telegraf/telegraf.conf"
+    owner: monitoring
+    group: monitoring
+    mode: '0755'
+  notify: "grafana_stack_restart"
+  become: true

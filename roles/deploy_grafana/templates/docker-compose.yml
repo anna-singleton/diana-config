@@ -1,4 +1,4 @@
-version: '3'
+version: '3.2'
 services:
   influxdb:
     image: influxdb:latest
@@ -6,36 +6,56 @@ services:
       - '8086:8086'
     volumes:
       - type: bind
-        src: /home/monitoring/sto-influxdb
-        dst: /var/lib/influxdb
+        source: /home/monitoring/sto-influxdb
+        target: /var/lib/influxdb2
     environment:
-      - INFLUXDB_DB=db0
-      - INFLUXDB_ADMIN_USER={{ influxdb_user }}
-      - INFLUXDB_ADMIN_PASSWORD={{ influxdb_password }}
+      INFLUXDB_DB: 'db0'
+      INFLUXDB_ADMIN_USER: '{{ influxdb_user }}'
+      INFLUXDB_ADMIN_PASSWORD: '{{ influxdb_password }}'
   chronograf:
     image: chronograf:latest
     ports:
       - '127.0.0.1:8888:8888'
     volumes:
       - type: bind
-        src: /home/monitoring/sto-chronograf
-        dst: /var/lib/chronograf
+        source: /home/monitoring/sto-chronograf
+        target: /var/lib/chronograf
     depends_on:
       - influxdb
     environment:
-      - INFLUXDB_URL=http://influxdb:8086
-      - INFLUXDB_USERNAME={{ influxdb_user }}
-      - INFLUXDB_PASSWORD={{ influxdb_password }}
+      INFLUXDB_URL: 'http://influxdb:8086'
+      INFLUXDB_USERNAME: '{{ influxdb_user }}'
+      INFLUXDB_PASSWORD: '{{ influxdb_password }}'
   grafana:
     image: grafana/grafana:latest
+    user: '1002'
     ports:
       - '3000:3000'
     volumes:
       - type: bind
-        src: /home/monitoring/sto-grafana
-        dst: /var/lib/grafana
+        source: /home/monitoring/sto-grafana
+        target: /var/lib/grafana
     depends_on:
       - influxdb
     environment:
-      - GF_SECURITY_ADMIN_USER={{ grafana_user }}
-      - GF_SECURITY_ADMIN_PASSWORD={{ grafana_password }}
+      GF_SECURITY_ADMIN_USER: '{{ grafana_user }}'
+      GF_SECURITY_ADMIN_PASSWORD: '{{ grafana_password }}'
+  telegraf:
+    image: telegraf:latest
+    depends_on:
+      - influxdb
+    volumes:
+      - type: bind
+        source: /home/monitoring/conf-telegraf
+        target: /etc/telegraf/
+      - type: bind
+        source: /
+        target: /hostfs
+    environment:
+      INFLUXDB_URL: 'http://influxdb:8086'
+      INFLUXDB_USERNAME: '{{ influxdb_user }}'
+      INFLUXDB_PASSWORD: '{{ influxdb_password }}'
+      HOST_SYS: /hostfs/sys
+      HOST_PROC: /hostfs/proc
+      HOST_ETC: /hostfs/etc
+      HOST_MOUNT_PREFIX: /hostfs
