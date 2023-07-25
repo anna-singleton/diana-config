@@ -1,6 +1,6 @@
 media:
   hosts:
-    diana:
+    ellie:
       ansible_host: foo.bar.baz
       ansible_port: 22
 

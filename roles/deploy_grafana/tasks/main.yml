@@ -1,0 +1,49 @@
+- name: ensure monitoring user exists
+  ansible.builtin.user:
+    name: monitoring
+    groups: docker
+    shell: /bin/bash
+    append: true
+  become: true
+
+- name: ensure folders exists
+  ansible.builtin.file:
+    path: /home/monitoring/{{ item }}
+    state: directory
+    owner: monitoring
+    group: monitoring
+    mode: '0755'
+  loop:
+    - "docker"
+    - "sto-influxdb"
+    - "sto-chronograf"
+    - "sto-grafana"
+    - "conf-telegraf"
+  become: true
+
+- name: "template out docker-compose.yml for grafana"
+  ansible.builtin.template:
+    src: "docker-compose.yml"
+    dest: "/home/monitoring/docker/docker-compose.yml"
+    owner: monitoring
+    group: monitoring
+    mode: '0755'
+  notify: "grafana_stack_restart"
+  become: true
+
+- name: "copy grafana-stack systemd service file"
+  ansible.builtin.copy:
+    src: "grafana-stack.service"
+    dest: "/etc/systemd/system/grafana-stack.service"
+  become: true
+  notify: "grafana_stack_restart"
+
+- name: "template out telegraf-conf"
+  ansible.builtin.template:
+    src: "telegraf.conf"
+    dest: "/home/monitoring/conf-telegraf/telegraf.conf"
+    owner: monitoring
+    group: monitoring
+    mode: '0755'
+  notify: "grafana_stack_restart"
+  become: true
