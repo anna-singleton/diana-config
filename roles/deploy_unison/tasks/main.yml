@@ -1,6 +1,7 @@
 - name: ensure unison user exists
   ansible.builtin.user:
     name: unison
+    shell: /bin/bash
   become: true
 
 - name: deploy management scripts
