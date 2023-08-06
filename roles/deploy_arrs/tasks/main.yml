@@ -1,0 +1,59 @@
+- name: create media-srv account
+  ansible.builtin.user:
+    name: media-srv
+    shell: /bin/bash
+    append: true
+    groups:
+      - jellyfin
+
+- name: install sonarr
+  block:
+    - name: add key
+      ansible.builtin.apt_key:
+        id: "2009837CBFFD68F45BC180471F4F90DE2A9B4BF8"
+        keyserver: "hkp://keyserver.ubuntu.com:80"
+
+    - name: add repo
+      ansible.builtin.apt_repository:
+        repo: "deb https://apt.sonarr.tv/debian buster main"
+
+    - name: install sonarr
+      ansible.builtin.apt:
+        name: sonarr
+        state: present
+        update_cache: yes
+
+    - name: put custom service file
+      ansible.builtin.copy:
+        src: sonarr.service
+        dest: /etc/systemd/system/sonarr.service.d/override.conf
+        owner: root
+        group: root
+        mode: '0644'
+  become: true
+
+- name: install and start nzbget
+  block:
+    - name: install nzbget
+      ansible.builtin.apt:
+        name: nzbget
+        state: present
+    - name: deploy systemd service file for nzbget
+      ansible.builtin.copy:
+        src: nzbgetd.service
+        dest: /etc/systemd/system/nzbgetd.service
+        owner: root
+        group: root
+        mode: '0644'
+    - name: enable and start nzbget via systemd
+      ansible.builtin.systemd:
+        name: nzbgetd
+        state: started
+        daemon_reload: true
+        enabled: true
+    - name: make config file writable by members of media-srv
+      ansible.builtin.file:
+        path: /etc/nzbget.conf
+        mode: '0664'
+        group: media-srv
+  become: true

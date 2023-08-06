@@ -3,6 +3,7 @@
   roles:
     - common
     - install_docker
+    - deploy_arrs
     - deploy_unison
     - deploy_jellyfin
     - deploy_grafana

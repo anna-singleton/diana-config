@@ -1,0 +1,12 @@
+[Unit]
+Description=nzbget daemon
+After=network.service
+
+[Service]
+User=media-srv
+Group=media-srv
+Restart=always
+ExecStart=/usr/bin/nzbget -s -o outputmode=color
+
+[Install]
+WantedBy=multi-user.target
