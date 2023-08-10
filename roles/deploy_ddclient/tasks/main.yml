@@ -1,0 +1,17 @@
+- name: "install ddclient"
+  ansible.builtin.apt:
+    name: ddclient
+    state: present
+  become: true
+
+- name: "template ddclient config"
+  ansible.builtin.template:
+    src: ddclient.conf
+    dest: /etc/ddclient.conf
+  become: true
+
+- name: "ensure ddclient is started and enabled"
+  ansible.builtin.systemd:
+    name: ddclient
+    state: started
+    enabled: true
