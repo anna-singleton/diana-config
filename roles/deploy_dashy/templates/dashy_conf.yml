@@ -1,0 +1,111 @@
+appConfig:
+  theme: dashy-docs
+  language: en
+  layout: auto
+  iconSize: medium
+  startingView: default
+  defaultOpeningMethod: newtab
+  statusCheck: true
+  statusCheckInterval: 0
+  faviconApi: allesedv
+  routingMode: history
+  enableMultiTasking: false
+  widgetsAlwaysUseProxy: false
+  webSearch:
+    disableWebSearch: false
+    searchEngine: duckduckgo
+    openingMethod: newtab
+    searchBangs:
+      /gh: github
+      /yt: youtube
+      /wk: wikipedia
+      /rdoc: 'https://doc.rust-lang.org/stable/std/index.html?search='
+  enableFontAwesome: true
+  enableMaterialDesignIcons: false
+  hideComponents:
+    hideHeading: false
+    hideNav: false
+    hideSearch: false
+    hideSettings: false
+    hideFooter: false
+  auth:
+    users:
+      - user: anna
+        hash: 928C3EBF986AC34A9BA8671782C8C0026AD91AEDD169131F6ED30AFCD82C79AC
+        type: admin
+    enableKeycloak: false
+    enableGuestAccess: true
+  showSplashScreen: false
+  preventWriteToDisk: true
+  preventLocalSave: true
+  disableConfiguration: false
+  disableConfigurationForNonAdmin: true
+  allowConfigEdit: true
+  enableServiceWorker: false
+  disableContextMenu: false
+  disableUpdateChecks: false
+  disableSmartSort: false
+  enableErrorReporting: false
+pageInfo:
+  title: ellie
+  description: ''
+  navLinks: []
+  footerText: ''
+sections:
+  - name: media server
+    icon: si-jellyfin
+    displayData:
+      sortBy: default
+      rows: 1
+      cols: 1
+      collapsed: false
+      hideForGuests: true
+    items:
+      - title: Jellyfin
+        icon: si-jellyfin
+        url: http://anna-banana.xyz:8096
+        target: sametab
+        id: 0_1207_jellyfin
+      - title: Sonarr
+        icon: hl-sonarr
+        url: http://anna-banana.xyz:8989
+        target: newtab
+        statusCheckUrl: http://anna-banana.xyz:8989/ping
+        id: 1_1207_sonarr
+  - name: monitoring
+    icon: fa-solid fa-gauge-high
+    displayData:
+      sortBy: default
+      rows: 1
+      cols: 1
+      collapsed: false
+      hideForGuests: true
+    items:
+      - title: Grafana
+        icon: si-grafana
+        url: http://anna-banana.xyz:3000
+        id: 0_1094_grafana
+      - title: influxdb
+        icon: si-influxdb
+        url: http://anna-banana.xyz:8086
+        id: 1_1094_influxdb
+  - name: External Resources
+    icon: fa-solid fa-sitemap
+    displayData:
+      sortBy: default
+      rows: 1
+      cols: 1
+      collapsed: false
+      hideForGuests: false
+    items:
+      - title: Github
+        icon: si-github
+        url: github.com
+        statusCheck: false
+        id: 0_1822_github
+      - title: Amazon S3
+        icon: si-amazons3
+        url: https://s3.console.aws.amazon.com/s3
+        statusCheck: false
+        id: 1_1822_amazons
+

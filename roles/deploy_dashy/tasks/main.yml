@@ -1,0 +1,36 @@
+- name: create dashy user
+  ansible.builtin.user:
+    name: dashy
+    shell: /bin/bash
+    groups: docker
+    append: true
+  become: true
+
+- name: deploy dashy configuration
+  ansible.builtin.template:
+    src: dashy_conf.yml
+    dest: /home/dashy/conf.yml
+    owner: dashy
+    group: dashy
+    mode: '0644'
+  become: true
+  notify: "dashy_restart_service"
+
+- name: deploy systemd service file
+  ansible.builtin.template:
+    src: dashy.service
+    dest: /etc/systemd/system/dashy.service
+  notify:
+    - "dashy_restart_service"
+    - "dashy_daemon_reload"
+  become: true
+
+- name: flush handlers to restart dashy if required
+  meta: flush_handlers
+
+- name: ensure dashy is started
+  ansible.builtin.systemd:
+    name: dashy
+    state: started
+    enabled: true
+  become: true

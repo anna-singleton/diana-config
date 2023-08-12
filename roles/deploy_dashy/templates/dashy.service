@@ -1,0 +1,16 @@
+[Unit]
+Description=Dashy Container
+After=docker.service
+Requires=docker.service
+
+[Service]
+TimeoutStartSec=0
+ExecStartPre=-/usr/bin/docker stop %n
+ExecStartPre=-/usr/bin/docker rm %n
+ExecStartPre=/usr/bin/docker pull lissy93/dashy
+ExecStart=/usr/bin/docker run -v /home/dashy/conf.yml:/app/public/conf.yml -p 8080:80 --rm --name %n lissy93/dashy
+User=dashy
+Group=dashy
+
+[Install]
+WantedBy=multi-user.target

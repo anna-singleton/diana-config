@@ -1,0 +1,12 @@
+- name: reload systemd daemon on .service change
+  ansible.builtin.systemd:
+    daemon_reload: true
+  listen: "dashy_daemon_reload"
+  become: true
+
+- name: restart dashy on config change
+  ansible.builtin.systemd:
+    name: dashy
+    state: restarted
+  listen: "dashy_restart_service"
+  become: true
