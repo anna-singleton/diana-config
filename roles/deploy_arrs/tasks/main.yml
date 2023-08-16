@@ -5,6 +5,7 @@
     append: true
     groups:
       - jellyfin
+  become: true
 
 - name: install sonarr
   block:
@@ -22,6 +23,14 @@
         name: sonarr
         state: present
         update_cache: yes
+
+    - name: create /etc/systemd/system/sonarr.service.d/
+      ansible.builtin.file:
+        path: /etc/systemd/system/sonarr.service.d/
+        state: directory
+        owner: root
+        group: root
+        mode: '0644'
 
     - name: put custom service file
       ansible.builtin.copy:
