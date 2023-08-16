@@ -3,9 +3,9 @@
   roles:
     - common
     - install_docker
+    - deploy_jellyfin
     - deploy_arrs
     - deploy_dashy
     - deploy_ddclient
     - deploy_grafana
-    - deploy_jellyfin
     - deploy_unison
