@@ -1,6 +1,7 @@
 - name: Test play
   hosts: media
   roles:
+    - deploy_caddy
     - common
     - install_docker
     - deploy_jellyfin

@@ -1,0 +1,21 @@
+- name: install caddy
+  ansible.builtin.apt:
+    name: caddy
+  become: true
+
+- name: deploy Caddyfile
+  ansible.builtin.copy:
+    src: Caddyfile
+    dest: /etc/caddy/Caddyfile
+    owner: root
+    group: root
+    mode: '0644'
+  become: true
+  notify: reload_caddy_config
+
+- name: start and enable caddy
+  ansible.builtin.systemd:
+    name: caddy
+    state: started
+    enabled: true
+  become: true

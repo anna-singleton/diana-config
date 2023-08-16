@@ -1,0 +1,18 @@
+anna-banana.xyz {
+        reverse_proxy localhost:8080
+}
+
+jellyfin.anna-banana.xyz {
+        reverse_proxy localhost:8096
+}
+
+grafana.anna-banana.xyz {
+        reverse_proxy localhost:3000
+}
+
+sonarr.anna-banana.xyz {
+        reverse_proxy localhost:8989
+}
+
+:2015
+respond "Health OK"

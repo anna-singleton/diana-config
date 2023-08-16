@@ -1,0 +1,5 @@
+- name: reload caddy config
+  listen: reload_caddy_config
+  ansible.builtin.shell:
+    cmd: caddy reload
+  become: true
