@@ -100,7 +100,7 @@ sections:
     items:
       - title: Github
         icon: si-github
-        url: github.com
+        url: https://github.com
         statusCheck: false
         id: 0_1822_github
       - title: Amazon S3
