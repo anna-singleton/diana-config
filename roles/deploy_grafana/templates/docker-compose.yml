@@ -28,7 +28,7 @@ services:
       INFLUXDB_PASSWORD: '{{ influxdb_password }}'
   grafana:
     image: grafana/grafana:latest
-    user: '1002'
+    user: '0'
     ports:
       - '3000:3000'
     volumes:
