@@ -25,7 +25,6 @@
   block:
     - ansible.builtin.apt:
         update_cache: yes
-        cache_valid_time: 3600
     - ansible.builtin.apt:
         name: jellyfin
       notify: jellyfin_restart
@@ -57,3 +56,12 @@
     state: started
     enabled: true
     name: jellyfin
+  become: true
+
+- name: setup jellyfin user
+  ansible.builtin.user:
+    name: jellyfin
+    shell: /bin/bash
+    groups: media-srv
+    append: true
+  become: true
