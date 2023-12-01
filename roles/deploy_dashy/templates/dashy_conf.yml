@@ -63,14 +63,14 @@ sections:
     items:
       - title: Jellyfin
         icon: si-jellyfin
-        url: http://anna-banana.xyz:8096
+        url: http://jellyfin.anna-banana.xyz
         target: sametab
         id: 0_1207_jellyfin
       - title: Sonarr
         icon: hl-sonarr
-        url: http://anna-banana.xyz:8989
+        url: http://sonarr.anna-banana.xyz
         target: newtab
-        statusCheckUrl: http://anna-banana.xyz:8989/ping
+        statusCheckUrl: http://sonarr.anna-banana.xyz/ping
         id: 1_1207_sonarr
   - name: monitoring
     icon: fa-solid fa-gauge-high
@@ -83,12 +83,8 @@ sections:
     items:
       - title: Grafana
         icon: si-grafana
-        url: http://anna-banana.xyz:3000
+        url: http://grafana.anna-banana.xyz
         id: 0_1094_grafana
-      - title: influxdb
-        icon: si-influxdb
-        url: http://anna-banana.xyz:8086
-        id: 1_1094_influxdb
   - name: External Resources
     icon: fa-solid fa-sitemap
     displayData:

@@ -14,5 +14,17 @@ sonarr.anna-banana.xyz {
         reverse_proxy localhost:8989
 }
 
+minecraft.anna-banana.xyz {
+        reverse_proxy localhost:25565
+}
+
+gossa.anna-banana.xyz {
+        reverse_proxy / localhost:8001
+
+        basicauth /* {
+            anna $2a$14$uhB/J9BpZYpKjmjIDuQpZ.dp/MkbxQ.mk0unAEp6tNpZA1jexEyTu
+        }
+}
+
 :2015
 respond "Health OK"

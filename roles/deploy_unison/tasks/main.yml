@@ -46,3 +46,42 @@
     user: unison
   become: true
 
+- name: deploy s3cmd config file
+  ansible.builtin.template:
+    src: .s3cfg
+    dest: '~unison/.s3cfg'
+    mode: 0600
+    owner: unison
+    group: unison
+  become: true
+
+- name: setup gossa
+  block:
+    - name: check gossa install
+      stat:
+        path: "/usr/local/bin/gossa"
+      register: gossa_install
+
+    - name: download gossa if not exists
+      ansible.builtin.get_url:
+        url: https://github.com/pldubouilh/gossa/releases/download/v1.0.0/gossa-linux-x64
+        dest: /usr/local/bin/gossa
+        mode: '0644'
+      when: gossa_install.stat.exists
+
+    - name: make file structure for gossa configs
+      ansible.builtin.file:
+        path: /home/unison/.config/user/
+        owner: unison
+        group: unison
+        state: directory
+
+    - name: copy gossa systemd unit file
+      ansible.builtin.copy:
+        src: gossa.service
+        dest: /home/unison/.config/user/gossa.service
+
+    - name: start systemd service file
+      ansible.builtin.shell: systemctl --user daemon-reload; systemctl --user enable --now gossa
+  become: true
+
